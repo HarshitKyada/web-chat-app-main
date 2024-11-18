@@ -62,6 +62,7 @@ function Chat() {
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [currFriend, setCurrFriend] = useState("");
+  const [count, setCount] = useState(0);
   const fetchMessages = async (username = chatData.name, id = chatData.id) => {
     if (chatData.id == -1) return;
     try {
@@ -76,7 +77,7 @@ function Chat() {
         {},
         config
       );
-      console.log(data);
+      // console.log(data);
       ADDUSERMESSAGE(id, data);
       SETCHAT(username, id);
       setCurrFriend(getFriendId(id));
@@ -95,7 +96,7 @@ function Chat() {
   };
 
   const getFriendId = (id) => {
-    console.log("came");
+    // console.log("came");
     if (id == -1) return "";
     else {
       for (let i = 0; i < friendData.length; i++) {
@@ -168,7 +169,7 @@ function Chat() {
     socket.emit("setup", JSON.parse(localStorage.getItem("userInfo")));
     socket.on("connected", () => {
       setSocketConnected(true);
-      console.log("connected to socket");
+      // console.log("connected to socket");
     });
   }, []);
 
@@ -188,8 +189,6 @@ function Chat() {
     });
 
     socket.on("added chat", (addedChat) => {
-      console.log("message from server");
-      console.log(addedChat);
       ADDFRIEND(addedChat);
       SETCHAT("", -1);
     });
@@ -200,7 +199,6 @@ function Chat() {
         selectedChatCompare.id !== deletedMessage.chat._id
       ) {
         //give notifs
-        console.log("notifs");
       } else {
         // console.log("deleted message");
         // console.log(deletedMessage);
@@ -215,7 +213,6 @@ function Chat() {
         selectedChatCompare.id !== editedMessage.chat._id
       ) {
         //give notifs
-        console.log("notifs");
       } else {
         // console.log("edited message");
         // console.log(editedMessage);
@@ -230,10 +227,7 @@ function Chat() {
         selectedChatCompare.id !== newMessageReceived.chat._id
       ) {
         //give notifs
-        console.log("notifs");
       } else {
-        console.log("new message", newMessageReceived);
-        // console.log(newMessageReceived);
         dispatch({
           type: "ADD_MESSAGE",
           message: newMessageReceived,
@@ -243,6 +237,22 @@ function Chat() {
       }
     });
   });
+
+  useEffect(() => {
+    const oldSec = new Date().getSeconds();
+
+    setInterval(() => {
+      const newSec = new Date().getSeconds();
+      if (newSec !== oldSec) {
+      }
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    if (count < 60) {
+      setCount(count + 1);
+    }
+  }, [count]);
 
   const logOut = async () => {
     // localStorage.clear();
@@ -261,10 +271,6 @@ function Chat() {
 
   return (
     <Flex m={"0"} p="0" flexDirection={"row"}>
-      {/* <HeaderMeta
-        content={"You can chat here with your friends and create friends"}
-        title={"Chat for Web Chat App"}
-      /> */}
       <Box maxW="fit-content" p="0" m="0">
         <Flex
           direction="column"

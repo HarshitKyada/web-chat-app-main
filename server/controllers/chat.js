@@ -17,7 +17,7 @@ const deleteChat = asyncHandler(async (req, res) => {
       chat: chatId,
     });
 
-    console.log("Number of messages deleted : " + isDeleted.deletedCount);
+    // console.log("Number of messages deleted : " + isDeleted.deletedCount);
     isDeleted = await ChatModel.deleteOne({
       isGroupChat: false,
       _id: chatId,
@@ -200,7 +200,6 @@ const getChatStats = asyncHandler(async (req, res) => {
     // res.status(200).json(data);
     res.status(200).json(getStats(data));
   } catch (err) {
-    console.log(err);
     throw new CustomError("Unable to fetch messages", 400);
   }
 });

@@ -3,10 +3,6 @@ import {
   Avatar,
   Flex,
   Text,
-  Box,
-  IconButton,
-  Input,
-  useToast,
   Icon,
   useColorModeValue,
   Tooltip,
@@ -25,9 +21,8 @@ export default function ({ props }) {
       flexDirection={props.isUser ? "row" : "row-reverse"}
       px={"4"}
     >
-      <Box width={"36%"}></Box>
       <Flex
-        minW={"40%"}
+        minW={"300px"}
         px={"2"}
         py={"2"}
         mt={"4"}

@@ -56,7 +56,7 @@ export default function StatisticsView({ chatId }) {
       );
       setOutput(data);
       onOpen();
-      console.log(data);
+      // console.log(data);
     } catch (err) {
       toast({
         title: "Error occured!",
@@ -116,9 +116,10 @@ export default function StatisticsView({ chatId }) {
             >
               {output == "" || output == null
                 ? ""
-                : Object.keys(output).map((v) => {
+                : Object.keys(output).map((v, i) => {
                     return (
                       <TableContainer
+                        key={i}
                         w={"80%"}
                         boxShadow="dark-lg"
                         cursor={"pointer"}
@@ -144,9 +145,9 @@ export default function StatisticsView({ chatId }) {
                             </Tr>
                           </Thead>
                           <Tbody>
-                            {Object.keys(output[v]).map((val) => {
+                            {Object.keys(output[v]).map((val, i) => {
                               return (
-                                <Tr>
+                                <Tr key={i}>
                                   <Td>{val}</Td>
                                   <Td>{output[v][val]}</Td>
                                 </Tr>

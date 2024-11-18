@@ -35,9 +35,9 @@ const port = 5000;
 const start = async () => {
   try {
     const con = await connectDB();
-    console.log(`MongoDB connected: ${con.connection.host}`.cyan.underline);
+    // console.log(`MongoDB connected: ${con.connection.host}`.cyan.underline);
   } catch (error) {
-    console.log(`${error}`.red.bold);
+    // console.log(`${error}`.red.bold);
     process.exit();
   }
 };
@@ -57,7 +57,7 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("connected to socket.io");
+  // console.log("connected to socket.io");
 
   socket.on("setup", (userData) => {
     socket.join(userData._id);
@@ -67,7 +67,7 @@ io.on("connection", (socket) => {
 
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("User joined room:" + room);
+    // console.log("User joined room:" + room);
   });
 
   socket.on("delete chat", (deleteChatData) => {
@@ -75,7 +75,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("add chat", (addChatData) => {
-    console.log(addChatData,"addChatData");
+    // console.log(addChatData,"addChatData");
     socket.in(addChatData.passId).emit("added chat", addChatData);
   });
 

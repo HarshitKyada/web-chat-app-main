@@ -10,13 +10,13 @@ const logHandler = (req, res, next) => {
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.header("Access-Control-Allow-Headers", "*");
-  console.log(
-    `${req.method} to ${req.path} ,body= ${JSON.stringify(
-      req.body
-    )} , headers= ${req.headers.authorization} with params= ${JSON.stringify(
-      req.params
-    )} and hostname=${req.hostname}\n`.yellow.italic
-  );
+  // console.log(
+  //   `${req.method} to ${req.path} ,body= ${JSON.stringify(
+  //     req.body
+  //   )} , headers= ${req.headers.authorization} with params= ${JSON.stringify(
+  //     req.params
+  //   )} and hostname=${req.hostname}\n`.yellow.italic
+  // );
   next();
 };
 

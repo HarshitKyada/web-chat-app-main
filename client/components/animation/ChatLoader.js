@@ -17,7 +17,7 @@ function ChatLoader({ number }) {
     <Stack mt={"3"}>
       {Array(number || 5)
         .fill("_")
-        .map((_) => {
+        .map((_,index) => {
           return (
             <Container
               display={"flex"}
@@ -25,6 +25,7 @@ function ChatLoader({ number }) {
               alignItems={"center"}
               gap={"3.5"}
               flexDirection="row"
+              key={index}
             >
               <SkeletonCircle size={"45"}>
                 <Avatar
