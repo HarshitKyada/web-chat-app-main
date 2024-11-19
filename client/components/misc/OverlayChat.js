@@ -1,4 +1,4 @@
-import { Container, Flex, Image, useColorModeValue } from "@chakra-ui/react";
+import { Flex, useColorModeValue } from "@chakra-ui/react";
 function OverlayChat() {
   const bgOverlayImage = useColorModeValue(
     "https://cdn.discordapp.com/attachments/921608169438994443/1093809257251614870/white-overlay.jpg",

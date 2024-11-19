@@ -17,12 +17,13 @@ import {
   useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
-import HeaderMeta from "../components/meta/HeaderMeta";
 import ColorChange from "../layout/ColorChange";
 import { useEffect } from "react";
 import { EmailIcon, ViewIcon, ViewOffIcon, LockIcon } from "@chakra-ui/icons";
 import Axios from "axios";
 import { NextSeo } from "next-seo";
+import "../styles/globals.css"
+
 const Home = () => {
   const color = useColorModeValue("#000", "#fff");
   const bg = useColorModeValue("gray.200", "#2e2b2b");

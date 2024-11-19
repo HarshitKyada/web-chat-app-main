@@ -3,13 +3,11 @@ import React from "react";
 import {
   Skeleton,
   SkeletonCircle,
-  SkeletonText,
   Flex,
   Container,
   Text,
   Stack,
-  Avatar,
-  Box,
+  Avatar
 } from "@chakra-ui/react";
 
 function ChatLoader({ number }) {

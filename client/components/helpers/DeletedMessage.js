@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineStop } from "react-icons/ai";
 export default function ({ props }) {
-  const color = useColorModeValue("#000", "#fff");
   const userbg = useColorModeValue("#cfc9c9", "#1c2c3c");
   const userhoverbg = useColorModeValue("#bbb9b9", "#2a3a49");
   const friendhoverbg = useColorModeValue("#8fa4b1", "#09090b");
@@ -21,23 +20,46 @@ export default function ({ props }) {
       flexDirection={props.isUser ? "row" : "row-reverse"}
       px={"4"}
     >
+      <Flex minW={"36%"}></Flex>
       <Flex
-        minW={"300px"}
+        position="relative"
+        minW={"280px"}
         px={"2"}
         py={"2"}
         mt={"4"}
         ml={"2"}
         height="fit-content"
         flexDirection={props.isUser ? "row-reverse" : "row"}
+        alignItems={"center"}
         bgColor={props.isUser ? userbg : friendbg}
         cursor="pointer"
+        borderRadius={
+          props.isUser ? "10px 0px 10px 10px" : "0px 10px 10px 10px"
+        }
         key={props.id}
-        borderRadius={"lg"}
+        gap={1}
         _hover={{ bgColor: props.isUser ? userhoverbg : friendhoverbg }}
+        css={{
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            width: "0",
+            height: "0",
+            borderStyle: "solid",
+            borderWidth: props.isUser
+              ? "10px 0px 10px 10px"
+              : "10px 10px 10px 0px", // Pointing direction
+            borderColor: props.isUser
+              ? `transparent transparent transparent ${userbg}`
+              : `transparent ${friendbg} transparent transparent`,
+            top: "10px",
+            right: props.isUser ? "-10px" : "unset",
+            left: props.isUser ? "unset" : "-10px",
+          },
+        }}
       >
         <Tooltip label={props.name} placement="bottom">
           <Avatar
-            mt="3"
             name={props.name}
             style={{
               border: "1px solid grey",
@@ -64,12 +86,11 @@ export default function ({ props }) {
               {/* {props.time} */}
             </Text>
           </Flex>
-          <Flex ml={"5"}>
-            <Icon mr={"3"} as={AiOutlineStop} w={5} h={5} color={"red.500"} />
+          <Flex gap={2} alignItems={"center"} justifyContent={"end"}>
+            <Icon  as={AiOutlineStop} w={5} h={5} color={"red.500"} />
             <Text color={"red.500"}>This message was deleted</Text>
           </Flex>
-          <Text mb={"2"} pt={"2"} fontSize={"11"} color={"red.500"}>
-            {/* 07/01/2023, 19:15:22 */}
+          <Text mb={"2"} pt={"2"} fontSize={"11"} color={"red.500"} textAlign={"end"}>
             {new Date(props.updated).toLocaleString()}
           </Text>
         </Flex>

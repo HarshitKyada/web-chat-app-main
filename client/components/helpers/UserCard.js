@@ -14,7 +14,7 @@ import Axios from "axios";
 function UserCard({ gmail, username, data: user_Data, socket }) {
   const toast = useToast();
   const dispatch = useDispatch();
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const { ADDFRIEND } = bindActionCreators(actionCreators, dispatch);
 
   const getFriendId = async (data, user) => {

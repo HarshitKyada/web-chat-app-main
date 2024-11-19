@@ -14,7 +14,6 @@ import { TbEdit } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { BiSave } from "react-icons/bi";
 import DeletedMessage from "./DeletedMessage";
 import { actionCreators } from "../../hooks";
 import Axios from "axios";
@@ -33,7 +32,7 @@ export default function (props) {
     actionCreators,
     dispatch
   );
-  
+
   useEffect(() => {
     setText(props.message);
     setUpdated(props.updated);
@@ -152,23 +151,44 @@ export default function (props) {
         >
           <Box width={"36%"}></Box>
           <Flex
-            minW={"300px"}
-            // w={"100%"}
+            position="relative"
+            minW={"280px"}
             px={"2"}
             py={"2"}
             mt={"4"}
             ml={"2"}
             height="fit-content"
             flexDirection={props.isUser ? "row-reverse" : "row"}
+            alignItems={"center"}
             bgColor={props.isUser ? userbg : friendbg}
             cursor="pointer"
-            borderRadius={"lg"}
+            gap={1}
+            borderRadius={
+              props.isUser ? "10px 0px 10px 10px" : "0px 10px 10px 10px"
+            }
             key={props.id}
             _hover={{ bgColor: props.isUser ? userhoverbg : friendhoverbg }}
+            css={{
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                width: "0",
+                height: "0",
+                borderStyle: "solid",
+                borderWidth: props.isUser
+                  ? "10px 0px 10px 10px"
+                  : "10px 10px 10px 0px",
+                borderColor: props.isUser
+                  ? `transparent transparent transparent ${userbg}`
+                  : `transparent ${friendbg} transparent transparent`,
+                top: "10px",
+                right: props.isUser ? "-10px" : "unset",
+                left: props.isUser ? "unset" : "-10px",
+              },
+            }}
           >
             <Tooltip label={props.name} placement="bottom">
               <Avatar
-                mt="3"
                 name={props.name}
                 style={{
                   border: "1px solid grey",
@@ -246,6 +266,7 @@ export default function (props) {
                 px={"3.5"}
                 borderRadius={"lg"}
                 flexDirection={props.isUser ? "row" : "row-reverse"}
+                justifyContent={"end"}
               >
                 <Text
                   color={color}

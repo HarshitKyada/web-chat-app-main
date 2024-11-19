@@ -1,16 +1,15 @@
 import {
   Box,
   Flex,
-  Button,
-  Avatar,
   Stack,
   IconButton,
   Icon,
-  Spinner,
   useToast,
   useColorMode,
   useColorModeValue,
+  Tooltip,
 } from "@chakra-ui/react";
+import debounce from "lodash/debounce";
 import MessageBox from "../components/core/MessageBox";
 import Navbar from "../components/core/Navbar";
 import FriendCard from "../components/helpers/FriendCard";
@@ -20,15 +19,13 @@ import { actionCreators } from "../hooks";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { FiLogOut } from "react-icons/fi";
 import { useState, useEffect } from "react";
-import MessageCard from "../components/helpers/MessageCard";
 import { useDispatch, useSelector } from "react-redux";
 import OverlayChat from "../components/misc/OverlayChat";
 import PorfileView from "../components/views/ProfileView";
 import Axios from "axios";
-import HeaderMeta from "../components/meta/HeaderMeta";
 import { io } from "socket.io-client";
-import ScrollableFeed from "react-scrollable-feed";
-import ChatLoader from "../components/animation/ChatLoader";
+import ScrollBar from "../components/views/ScrollBar";
+import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
 
 const ENDPOINT = `http://localhost:5000`;
 var socket, selectedChatCompare;
@@ -59,10 +56,10 @@ function Chat() {
   const friendData = useSelector((state) => state.friends);
   const userData = useSelector((state) => state.user);
   const messageData = useSelector((state) => state.messages);
-
-  const [socketConnected, setSocketConnected] = useState(false);
   const [currFriend, setCurrFriend] = useState("");
   const [count, setCount] = useState(0);
+  const [innerWidth, setWidth] = useState(0);
+  const [sideBarToggle, setSideBarToggle] = useState(false);
   const fetchMessages = async (username = chatData.name, id = chatData.id) => {
     if (chatData.id == -1) return;
     try {
@@ -168,7 +165,6 @@ function Chat() {
 
     socket.emit("setup", JSON.parse(localStorage.getItem("userInfo")));
     socket.on("connected", () => {
-      setSocketConnected(true);
       // console.log("connected to socket");
     });
   }, []);
@@ -254,6 +250,16 @@ function Chat() {
     }
   }, [count]);
 
+  useEffect(() => {
+    const handleResize = debounce(() => {
+      setWidth(window.innerWidth);
+    }, 10);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener;
+  }, []);
+
   const logOut = async () => {
     // localStorage.clear();
     localStorage.removeItem("userInfo");
@@ -269,12 +275,21 @@ function Chat() {
     window.location.href = "./";
   };
 
+  const handleSidebarWidth = () => {
+    setSideBarToggle(!sideBarToggle);
+  };
+  const w = sideBarToggle
+    ? "89px"
+    : innerWidth > 750
+    ? `${innerWidth * 0.3}px`
+    : "193px";
+
   return (
     <Flex m={"0"} p="0" flexDirection={"row"}>
       <Box maxW="fit-content" p="0" m="0">
         <Flex
           direction="column"
-          w="300px"
+          w={w}
           h="100vh"
           overflowY="scroll"
           css={{
@@ -283,6 +298,7 @@ function Chat() {
             },
             msOverflowStyle: "none",
             scrollbarWidth: "none",
+            transition: "width 0.3s ease-in-out",
           }}
         >
           <Flex
@@ -291,7 +307,7 @@ function Chat() {
             position="sticky"
             top={0}
             zIndex={199}
-            p={4}
+            p={sideBarToggle ? 2 : 4}
             h={"81px"}
             borderBottom="1px solid"
             bgColor={colorMode == "light" ? "#fff" : "#171c1f"}
@@ -299,23 +315,56 @@ function Chat() {
               colorMode == "light" ? "#c3cfd7" : "#2D3748"
             } `}
           >
-            <PorfileView username={userData.username} gmail={userData.gmail} />
+            <PorfileView
+              username={userData.username}
+              gmail={userData.gmail}
+              sideBarToggle={sideBarToggle}
+            />
             <Stack isInline>
-              <IconButton
-                size="sm"
-                isRound
-                onClick={toggleColorMode}
-                _focus={{ boxShadow: "none" }}
-                icon={colorIcon}
-              />
+              {!sideBarToggle && (
+                <>
+                  <IconButton
+                    size="sm"
+                    isRound
+                    onClick={toggleColorMode}
+                    _focus={{ boxShadow: "none" }}
+                    icon={colorIcon}
+                  />
 
-              <IconButton
-                icon={<Icon as={FiLogOut} />}
-                _focus={{ boxShadow: "none" }}
-                size="sm"
-                onClick={logOut}
-                isRound
-              />
+                  <IconButton
+                    icon={<Icon as={FiLogOut} />}
+                    _focus={{ boxShadow: "none" }}
+                    size="sm"
+                    onClick={logOut}
+                    isRound
+                  />
+                </>
+              )}
+              <Tooltip
+                label={sideBarToggle ? "Open" : "Close"}
+                placement="bottom"
+              >
+                <IconButton
+                  size="sm"
+                  isRound
+                  onClick={handleSidebarWidth}
+                  _focus={{ boxShadow: "none" }}
+                  css={{
+                    transition: "transform 0.3s ease-in-out",
+                  }}
+                  icon={
+                    sideBarToggle ? (
+                      <FiArrowRight
+                        style={{ transition: "transform 0.3s ease-in-out" }}
+                      />
+                    ) : (
+                      <FiArrowLeft
+                        style={{ transition: "transform 0.3s ease-in-out" }}
+                      />
+                    )
+                  }
+                />
+              </Tooltip>
             </Stack>
           </Flex>
           <Flex
@@ -326,7 +375,7 @@ function Chat() {
             flex="1"
           >
             <Flex direction="column" p={4}>
-              <SlideDrawer socket={socket} />
+              <SlideDrawer socket={socket} sideBarToggle={sideBarToggle} />
             </Flex>
             <Flex flexDir={"column"} flexGrow="1" gap="2px">
               {friendData.map((v, i) => {
@@ -347,6 +396,7 @@ function Chat() {
                       name={v.username}
                       id={v.chatId}
                       select={chatData.id}
+                      sideBarToggle={sideBarToggle}
                     />
                   </Box>
                 );
@@ -373,47 +423,13 @@ function Chat() {
               friend={currFriend}
               id={chatData.id}
             />
-            <Box
-              bgColor={bg}
-              overflowY="scroll"
-              height={"80vh"}
-              mb={"4"}
-              py={"2"}
-              css={{
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-
-                msOverflowStyle: "none",
-                scrollbarWidth: "none",
-              }}
-            >
-              <ScrollableFeed forceScroll={"false"}>
-                <Flex flexDirection={"column"} px={"2"} pt={"4"} pb={"1"}>
-                  {messageData[chatData.id] === undefined ? (
-                    <ChatLoader number={15} />
-                  ) : (
-                    messageData[chatData.id].map((v, i) => {
-                      return (
-                        <Box key={i}>
-                          <MessageCard
-                            socket={socket}
-                            num={i}
-                            isDeleted={v.isDeleted}
-                            message={v.content}
-                            name={v.sender.username}
-                            id={v._id}
-                            updated={v.updatedAt}
-                            time={v.createdAt}
-                            isUser={v.sender._id === userData._id}
-                          />
-                        </Box>
-                      );
-                    })
-                  )}
-                </Flex>
-              </ScrollableFeed>
-            </Box>
+            <ScrollBar
+              bg={bg}
+              messageData={messageData}
+              chatData={chatData}
+              userData={userData}
+              socket={socket}
+            />
             <MessageBox socket={socket} />
           </Box>
         )}

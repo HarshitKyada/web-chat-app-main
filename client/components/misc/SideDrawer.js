@@ -3,10 +3,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoader from "../animation/ChatLoader";
 import {
-  Container,
   Input,
   Box,
-  Spinner,
   Button,
   useDisclosure,
   Drawer,
@@ -18,6 +16,7 @@ import {
   useToast,
   Stack,
   useColorModeValue,
+  Flex,
 } from "@chakra-ui/react";
 import UserCard from "../helpers/UserCard";
 import Axios from "axios";
@@ -32,7 +31,6 @@ function SideDrawer(props) {
   const [result, setResult] = useState([]);
   const [user, setUser] = useState("");
   const [loading, setloading] = useState(false);
-  const [loadingUser, setLoadingUser] = useState(false);
   const toast = useToast();
   const ref = useRef(null);
 
@@ -103,9 +101,14 @@ function SideDrawer(props) {
           letterSpacing="wide"
           textTransform="uppercase"
           fontSize="md"
-          leftIcon={<AddIcon color={color} />}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
         >
-          New Chat
+          <Flex gap={2} alignItems={"center"}>
+            <AddIcon color={color} />
+            {!props?.sideBarToggle && <p>New Chat</p>}
+          </Flex>
         </Button>
       </Tooltip>
 
@@ -121,7 +124,6 @@ function SideDrawer(props) {
               flexDirection={"row"}
               pb={2}
               zIndex={"1"}
-              // width={"95%"}
             >
               <Input
                 placeholder="Search by name or email"

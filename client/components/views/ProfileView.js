@@ -16,18 +16,19 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
-export default function ProfileView({ username, gmail }) {
+export default function ProfileView({ username, gmail,sideBarToggle }) {
   const color = useColorModeValue("#3b3838", "#a49e9e");
   const headcolor = useColorModeValue("#3a3838", "#fff");
   const bgcolor = useColorModeValue("#fff", "#1b1e20");
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Tooltip placement="right-end" hasArrow label="Profile View">
+      <Tooltip placement="right-end" hasArrow label={username}>
         <Avatar
           cursor={"pointer"}
           onClick={onOpen}
           src={`https://api.dicebear.com/7.x/bottts/svg?seed=${username}`}
+          size={sideBarToggle?"sm":"md"}
         />
       </Tooltip>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
@@ -73,11 +74,6 @@ export default function ProfileView({ username, gmail }) {
                 </Text>
               </Flex>
             </Container>
-
-            {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea odit
-            excepturi at eveniet libero molestias, laudantium necessitatibus
-            quasi sed vitae cumque unde aliquam sint quaerat, officia sunt rerum
-            quis eum. */}
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>

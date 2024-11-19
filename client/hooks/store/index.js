@@ -1,7 +1,6 @@
 import {
   legacy_createStore as createStore,
-  applyMiddleware,
-  compose,
+  applyMiddleware
 } from "redux";
 import Reducers from "../reducers/index";
 import thunk from "redux-thunk";
